@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } elseif ($type === 'Employee') {
             $sql = "INSERT INTO employee (Name, Email, Password, DOB, Location, City) VALUES (?, ?, ?, ?, ?, ?)";
             $stmt = mysqli_prepare($con, $sql);
-            mysqli_stmt_bind_param($stmt, "ssssss", var: $name, $email, $password, $dob, $location, $city);
+            mysqli_stmt_bind_param($stmt, "ssssss", $name, $email, $password, $dob, $location, $city);
             mysqli_stmt_execute($stmt);
         }
         mysqli_close($con);
@@ -53,24 +53,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button class="btn btn-primary" onclick="setFormType('HR')">Add HR</button>
             <button class="btn btn-primary" onclick="setFormType('Employee')">Add Employee</button>
         </div>
-        <form method="post" class="w-full max-w-md bg-white p-6 rounded-lg shadow">
+        <form method="post" action="admin.php" class="w-full max-w-md bg-white p-6 rounded-lg shadow" onsubmit="return handleAdminSubmit(event)">
             <h2 id="formTitle" class="text-xl font-bold mb-4 text-blue-700">Add HR</h2>
             <input type="hidden" name="type" id="typeInput" value="HR" />
-            <input type="text" name="name" placeholder="Name" required class="input input-bordered w-full mb-3" />
-            <input type="email" name="email" placeholder="Email" required class="input input-bordered w-full mb-3" />
-            <input type="password" name="password" placeholder="Password" required class="input input-bordered w-full mb-3" />
-            <input type="password" name="confirm_password" placeholder="Confirm Password" required class="input input-bordered w-full mb-3" />
-            <input type="date" name="dob" placeholder="DOB" required class="input input-bordered w-full mb-3" />
-            <input type="text" name="location" placeholder="Location" required class="input input-bordered w-full mb-3" />
-            <input type="text" name="city" placeholder="City" required class="input input-bordered w-full mb-3" />
+            <input type="text" id="name" name="name" placeholder="Name" required class="input input-bordered w-full mb-1" />
+            <span id="nameError" class="text-red-600 text-xs"></span>
+            <input type="email" id="email" name="email" placeholder="Email" required class="input input-bordered w-full mb-1" />
+            <span id="emailError" class="text-red-600 text-xs"></span>
+            <input type="password" id="password" name="password" placeholder="Password" required class="input input-bordered w-full mb-1" />
+            <span id="password1Error" class="text-red-600 text-xs"></span>
+            <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm Password" required class="input input-bordered w-full mb-1" />
+            <span id="password2Error" class="text-red-600 text-xs"></span>
+            <input type="date" id="dob" name="dob" placeholder="DOB" required class="input input-bordered w-full mb-1" />
+            <span id="dobError" class="text-red-600 text-xs"></span>
+            <input type="text" id="location" name="location" placeholder="Location" required class="input input-bordered w-full mb-1" />
+            <span id="locationError" class="text-red-600 text-xs"></span>
+            <input type="text" id="city" name="city" placeholder="City" required class="input input-bordered w-full mb-1" />
+            <span id="cityError" class="text-red-600 text-xs"></span>
             <button type="submit" class="btn btn-primary w-full mt-2">Submit</button>
         </form>
+        <?php if (isset($_GET['success'])): ?>
+            <div class="text-green-600 font-semibold mb-4">User added successfully!</div>
+        <?php endif; ?>
+        
     </section>
+    <script src="verification.js"></script>
     <script>
-        function setFormType(type) {
-            document.getElementById('formTitle').innerText = 'Add ' + type;
-            document.getElementById('typeInput').value = type;
+    function handleAdminSubmit(event) {
+        if (!validateAdminForm()) {
+            event.preventDefault();
+            return false;
         }
+        // If valid, let the form submit to verification.php
+        return true;
+    }
+    function setFormType(type) {
+        document.getElementById('formTitle').innerText = 'Add ' + type;
+        document.getElementById('typeInput').value = type;
+    }
     </script>
 </body>
 </html>
