@@ -23,7 +23,11 @@ if (isset($_POST["loginName"]) && isset($_POST["loginPassword"])) {
             $_SESSION["loginName"] = $loginName;
             $_SESSION["userName"] = $row['Name'];
             $_SESSION["userType"] = $table;
-            header("Location: mainPage.php");
+            if ($table === 'hr') {
+                header("Location: hr.php");
+            } else {
+                header("Location: mainPage.php");
+            }
             exit();
         }
     }
