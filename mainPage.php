@@ -66,8 +66,8 @@ if ($con) {
                 <p id="nav-num" class="text-2xl font-bold"><?php echo count($tasks); ?></p>
               </div>
               <div>
-                <button class="theme-button">
-                  <img src="./assets/theme-btn.png" alt="" srcset="" />
+                <button class="btn btn-primary logout-btn">
+                  <a href="logout.php" class="text-white">Logout</a>
                 </button>
               </div>
             </div>

@@ -98,6 +98,9 @@
         <?php if (isset($_GET['error'])): ?>
             <div class="error">Name or password incorrect.</div>
         <?php endif; ?>
+        <?php if (isset($_GET['login_needed'])): ?>
+            <div class="error">Login needed to access the dashboard.</div>
+        <?php endif; ?>
     </div>
 </body>
 </html>
