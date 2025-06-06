@@ -50,10 +50,5 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    const discoverBtn = document.getElementById("discover-btn");
-    if (discoverBtn) {
-        discoverBtn.addEventListener('click', function() {
-            window.location.href = "./blog.html";
-        });
-    }
+    
 });

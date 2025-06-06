@@ -92,7 +92,6 @@ if ($con) {
                 </div>
               </div>
             </div>
-            <button id="discover-btn">
               <div
                 class="py-4 px-6 flex gap-5 bg-gradient-to-r from-blue-500 to-purple-200 rounded-md"
               >
@@ -101,7 +100,6 @@ if ($con) {
                   Discover Something <br />New Today!
                 </p>
               </div>
-            </button>
 
             <div class="flex gap-5 mx-10 rounded-md p-8 bg-gray-200">
               <img src="./assets/calender.png" alt="" srcset="" />
