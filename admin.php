@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } elseif ($type === 'Employee') {
             $sql = "INSERT INTO employee (Name, Email, Password, DOB, Location, City) VALUES (?, ?, ?, ?, ?, ?)";
             $stmt = mysqli_prepare($con, $sql);
-            mysqli_stmt_bind_param($stmt, "ssssss", $name, $email, $password, $dob, $location, $city);
+            mysqli_stmt_bind_param($stmt, "ssssss", var: $name, $email, $password, $dob, $location, $city);
             mysqli_stmt_execute($stmt);
         }
         mysqli_close($con);
