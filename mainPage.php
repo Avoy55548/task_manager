@@ -66,9 +66,9 @@ if ($con) {
                 <p id="nav-num" class="text-2xl font-bold"><?php echo count($tasks); ?></p>
               </div>
               <div>
-                <button class="btn btn-primary logout-btn">
-                  <a href="logout.php" class="text-white">Logout</a>
-                </button>
+                <form action="logout.php" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-primary logout-btn text-white">Logout</button>
+                </form>
               </div>
             </div>
           </div>
