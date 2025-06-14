@@ -32,6 +32,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 }
+
+$con = mysqli_connect("localhost", "root", "", "taskmanagement");
+$hrList = [];
+$empList = [];
+if ($con) {
+    $hrResult = mysqli_query($con, "SELECT * FROM hr");
+    while ($row = mysqli_fetch_assoc($hrResult)) {
+        $hrList[] = $row;
+    }
+    $empResult = mysqli_query($con, "SELECT * FROM employee");
+    while ($row = mysqli_fetch_assoc($empResult)) {
+        $empList[] = $row;
+    }
+    mysqli_close($con);
+}
 ?>
 
 <!DOCTYPE html>
@@ -76,6 +91,60 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="text-green-600 font-semibold mb-4">User added successfully!</div>
         <?php endif; ?>
         
+        <div id="hrTable" style="display:block;">
+            <h3 class="text-lg font-bold mb-2">HR Table</h3>
+            <div class="overflow-x-auto">
+                <table class="table w-full mb-8">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>DOB</th>
+                            <th>Location</th>
+                            <th>City</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($hrList as $hr): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($hr['Name']); ?></td>
+                            <td><?php echo htmlspecialchars($hr['Email']); ?></td>
+                            <td><?php echo htmlspecialchars($hr['DOB']); ?></td>
+                            <td><?php echo htmlspecialchars($hr['Location']); ?></td>
+                            <td><?php echo htmlspecialchars($hr['City']); ?></td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="empTable" style="display:none;">
+            <h3 class="text-lg font-bold mb-2">Employee Table</h3>
+            <div class="overflow-x-auto">
+                <table class="table w-full mb-8">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>DOB</th>
+                            <th>Location</th>
+                            <th>City</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($empList as $emp): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($emp['Name']); ?></td>
+                            <td><?php echo htmlspecialchars($emp['Email']); ?></td>
+                            <td><?php echo htmlspecialchars($emp['DOB']); ?></td>
+                            <td><?php echo htmlspecialchars($emp['Location']); ?></td>
+                            <td><?php echo htmlspecialchars($emp['City']); ?></td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </section>
     <script src="verification.js"></script>
     <script>
@@ -90,6 +159,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     function setFormType(type) {
         document.getElementById('formTitle').innerText = 'Add ' + type;
         document.getElementById('typeInput').value = type;
+        if (type === 'HR') {
+            document.getElementById('hrTable').style.display = 'block';
+            document.getElementById('empTable').style.display = 'none';
+        } else {
+            document.getElementById('hrTable').style.display = 'none';
+            document.getElementById('empTable').style.display = 'block';
+        }
     }
     </script>
 </body>
