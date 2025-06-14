@@ -91,60 +91,63 @@ if ($con) {
             <div class="text-green-600 font-semibold mb-4">User added successfully!</div>
         <?php endif; ?>
         
-        <div id="hrTable" style="display:block;">
-            <h3 class="text-lg font-bold mb-2">HR Table</h3>
-            <div class="overflow-x-auto">
-                <table class="table w-full mb-8">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>DOB</th>
-                            <th>Location</th>
-                            <th>City</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($hrList as $hr): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($hr['Name']); ?></td>
-                            <td><?php echo htmlspecialchars($hr['Email']); ?></td>
-                            <td><?php echo htmlspecialchars($hr['DOB']); ?></td>
-                            <td><?php echo htmlspecialchars($hr['Location']); ?></td>
-                            <td><?php echo htmlspecialchars($hr['City']); ?></td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div id="empTable" style="display:none;">
-            <h3 class="text-lg font-bold mb-2">Employee Table</h3>
-            <div class="overflow-x-auto">
-                <table class="table w-full mb-8">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>DOB</th>
-                            <th>Location</th>
-                            <th>City</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($empList as $emp): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($emp['Name']); ?></td>
-                            <td><?php echo htmlspecialchars($emp['Email']); ?></td>
-                            <td><?php echo htmlspecialchars($emp['DOB']); ?></td>
-                            <td><?php echo htmlspecialchars($emp['Location']); ?></td>
-                            <td><?php echo htmlspecialchars($emp['City']); ?></td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        <!-- HR Table -->
+<div id="hrTable" style="display:block;">
+    <h3 class="text-lg font-bold mb-4 text-blue-700">HR Table</h3>
+    <div class="overflow-x-auto rounded-lg shadow">
+        <table class="table w-full bg-white">
+            <thead class="bg-blue-100 text-blue-800">
+                <tr>
+                    <th class="px-4 py-2">Name</th>
+                    <th class="px-4 py-2">Email</th>
+                    <th class="px-4 py-2">DOB</th>
+                    <th class="px-4 py-2">Location</th>
+                    <th class="px-4 py-2">City</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($hrList as $hr): ?>
+                <tr class="hover:bg-blue-50 transition">
+                    <td class="px-4 py-2"><?php echo htmlspecialchars($hr['Name']); ?></td>
+                    <td class="px-4 py-2"><?php echo htmlspecialchars($hr['Email']); ?></td>
+                    <td class="px-4 py-2"><?php echo htmlspecialchars($hr['DOB']); ?></td>
+                    <td class="px-4 py-2"><?php echo htmlspecialchars($hr['Location']); ?></td>
+                    <td class="px-4 py-2"><?php echo htmlspecialchars($hr['City']); ?></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Employee Table -->
+<div id="empTable" style="display:none;">
+    <h3 class="text-lg font-bold mb-4 text-purple-700">Employee Table</h3>
+    <div class="overflow-x-auto rounded-lg shadow">
+        <table class="table w-full bg-white">
+            <thead class="bg-purple-100 text-purple-800">
+                <tr>
+                    <th class="px-4 py-2">Name</th>
+                    <th class="px-4 py-2">Email</th>
+                    <th class="px-4 py-2">DOB</th>
+                    <th class="px-4 py-2">Location</th>
+                    <th class="px-4 py-2">City</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($empList as $emp): ?>
+                <tr class="hover:bg-purple-50 transition">
+                    <td class="px-4 py-2"><?php echo htmlspecialchars($emp['Name']); ?></td>
+                    <td class="px-4 py-2"><?php echo htmlspecialchars($emp['Email']); ?></td>
+                    <td class="px-4 py-2"><?php echo htmlspecialchars($emp['DOB']); ?></td>
+                    <td class="px-4 py-2"><?php echo htmlspecialchars($emp['Location']); ?></td>
+                    <td class="px-4 py-2"><?php echo htmlspecialchars($emp['City']); ?></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
     </section>
     <script src="verification.js"></script>
     <script>
