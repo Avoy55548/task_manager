@@ -2,7 +2,7 @@
 session_start();
 $con = mysqli_connect("localhost", "root", "", "taskmanagement");
 
-// Insert HR
+// --- HR Actions ---
 if (isset($_POST['insert_hr'])) {
     $name = trim($_POST['name']);
     $email = trim($_POST['email']);
@@ -11,22 +11,23 @@ if (isset($_POST['insert_hr'])) {
     $dob = trim($_POST['dob']);
     $location = trim($_POST['location']);
     $city = trim($_POST['city']);
-
-    // Only insert if passwords match
     if ($password === $confirm_password) {
         $sql = "INSERT INTO hr (Name, Email, Password, DOB, Location, City) VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = mysqli_prepare($con, $sql);
         mysqli_stmt_bind_param($stmt, "ssssss", $name, $email, $password, $dob, $location, $city);
         mysqli_stmt_execute($stmt);
-        header("Location: admin.php?success=1");
+        header("Location: admin.php?tab=hr&success=1");
         exit();
     } else {
-        header("Location: admin.php?error=password");
+        header("Location: admin.php?tab=hr&error=password");
         exit();
     }
 }
-
-// Update HR
+if (isset($_POST['edit_hr_id'])) {
+    $id = intval($_POST['edit_hr_id']);
+    $result = mysqli_query($con, "SELECT * FROM hr WHERE id=$id");
+    $editHR = mysqli_fetch_assoc($result);
+}
 if (isset($_POST['update_hr'])) {
     $id = intval($_POST['update_hr_id']);
     $name = trim($_POST['update_hr_name']);
@@ -38,27 +39,17 @@ if (isset($_POST['update_hr'])) {
     $stmt = mysqli_prepare($con, $sql);
     mysqli_stmt_bind_param($stmt, "sssssi", $name, $email, $dob, $location, $city, $id);
     mysqli_stmt_execute($stmt);
-    header("Location: admin.php?success=1");
+    header("Location: admin.php?tab=hr&success=1");
     exit();
 }
-
-// Delete HR
 if (isset($_POST['delete_hr_id'])) {
     $id = intval($_POST['delete_hr_id']);
     mysqli_query($con, "DELETE FROM hr WHERE id=$id");
-    header("Location: admin.php?success=1");
+    header("Location: admin.php?tab=hr&success=1");
     exit();
 }
 
-// Edit HR (show edit form)
-$editHR = null;
-if (isset($_POST['edit_hr_id'])) {
-    $id = intval($_POST['edit_hr_id']);
-    $result = mysqli_query($con, "SELECT * FROM hr WHERE id=$id");
-    $editHR = mysqli_fetch_assoc($result);
-}
-
-// Insert Employee
+// --- Employee Actions ---
 if (isset($_POST['insert_employee'])) {
     $name = trim($_POST['name']);
     $email = trim($_POST['email']);
@@ -67,38 +58,23 @@ if (isset($_POST['insert_employee'])) {
     $dob = trim($_POST['dob']);
     $location = trim($_POST['location']);
     $city = trim($_POST['city']);
-
-    // Only insert if passwords match
     if ($password === $confirm_password) {
         $sql = "INSERT INTO employee (Name, Email, Password, DOB, Location, City) VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = mysqli_prepare($con, $sql);
         mysqli_stmt_bind_param($stmt, "ssssss", $name, $email, $password, $dob, $location, $city);
         mysqli_stmt_execute($stmt);
-        header("Location: admin.php?success=1");
+        header("Location: admin.php?tab=employee&success=1");
         exit();
     } else {
-        header("Location: admin.php?error=password");
+        header("Location: admin.php?tab=employee&error=password");
         exit();
     }
 }
-
-// Delete Employee
-if (isset($_POST['delete_employee_id'])) {
-    $id = intval($_POST['delete_employee_id']);
-    mysqli_query($con, "DELETE FROM employee WHERE id=$id");
-    header("Location: admin.php?success=1");
-    exit();
-}
-
-// Edit Employee (show edit form)
-$editEmployee = null;
 if (isset($_POST['edit_employee_id'])) {
     $id = intval($_POST['edit_employee_id']);
     $result = mysqli_query($con, "SELECT * FROM employee WHERE id=$id");
     $editEmployee = mysqli_fetch_assoc($result);
 }
-
-// Update Employee
 if (isset($_POST['update_employee'])) {
     $id = intval($_POST['update_employee_id']);
     $name = trim($_POST['update_employee_name']);
@@ -110,92 +86,109 @@ if (isset($_POST['update_employee'])) {
     $stmt = mysqli_prepare($con, $sql);
     mysqli_stmt_bind_param($stmt, "sssssi", $name, $email, $dob, $location, $city, $id);
     mysqli_stmt_execute($stmt);
-    header("Location: admin.php?success=1");
+    header("Location: admin.php?tab=employee&success=1");
+    exit();
+}
+if (isset($_POST['delete_employee_id'])) {
+    $id = intval($_POST['delete_employee_id']);
+    mysqli_query($con, "DELETE FROM employee WHERE id=$id");
+    header("Location: admin.php?tab=employee&success=1");
     exit();
 }
 
-$con = mysqli_connect("localhost", "root", "", "taskmanagement");
+// Fetch data
 $hrList = [];
 $empList = [];
-if ($con) {
-    $hrResult = mysqli_query($con, "SELECT * FROM hr");
-    while ($row = mysqli_fetch_assoc($hrResult)) {
-        $hrList[] = $row;
-    }
-    $empResult = mysqli_query($con, "SELECT * FROM employee");
-    while ($row = mysqli_fetch_assoc($empResult)) {
-        $empList[] = $row;
-    }
-    mysqli_close($con);
-}
+$hrResult = mysqli_query($con, "SELECT * FROM hr");
+while ($row = mysqli_fetch_assoc($hrResult)) $hrList[] = $row;
+$empResult = mysqli_query($con, "SELECT * FROM employee");
+while ($row = mysqli_fetch_assoc($empResult)) $empList[] = $row;
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Admin Panel</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <script src="verification.js"></script>
+    <style>
+        .tab-btn.active { background: #6366f1; color: #fff; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
 </head>
-<body class="font-poppins">
+<body>
     <div class="p-4 text-2xl font-bold text-white bg-gradient-to-r from-blue-500 to-purple-500 rounded-b-xl shadow-md text-center tracking-wide mb-4">
         Welcome Admin!
         <a href="logout.php" class="btn btn-error btn-sm float-right mt-2 mr-4" style="position:absolute;right:30px;top:10px;">Logout</a>
     </div>
-    <section class="max-w-2xl mx-auto py-10 flex flex-col items-center gap-8">
+    <div class="max-w-4xl mx-auto py-10">
         <div class="flex gap-4 mb-6">
-            <button class="btn btn-primary" onclick="setFormType('HR')">Add HR</button>
-            <button class="btn btn-primary" onclick="setFormType('Employee')">Add Employee</button>
+            <button class="tab-btn btn btn-primary" id="hrTabBtn" onclick="showTab('hr')">HR</button>
+            <button class="tab-btn btn btn-primary" id="employeeTabBtn" onclick="showTab('employee')">Employee</button>
         </div>
-        <form method="post" action="admin.php" onsubmit="return validateAdminForm();">
-            <h2 id="formTitle" class="text-xl font-bold mb-4 text-blue-700">Add HR</h2>
-            <input type="hidden" name="type" id="typeInput" value="HR" />
-            <input type="text" id="name" name="name" placeholder="Name" required class="input input-bordered w-full mb-1" />
-            <span id="nameError" class="text-red-600 text-xs"></span>
-            <input type="email" id="email" name="email" placeholder="Email" required class="input input-bordered w-full mb-1" />
-            <span id="emailError" class="text-red-600 text-xs"></span>
-            <input type="password" id="password" name="password" placeholder="Password" required class="input input-bordered w-full mb-1" />
-            <span id="password1Error" class="text-red-600 text-xs"></span>
-            <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm Password" required class="input input-bordered w-full mb-1" />
-            <span id="password2Error" class="text-red-600 text-xs"></span>
-            <input type="date" id="dob" name="dob" placeholder="DOB" required class="input input-bordered w-full mb-1" />
-            <span id="dobError" class="text-red-600 text-xs"></span>
-            <input type="text" id="location" name="location" placeholder="Location" required class="input input-bordered w-full mb-1" />
-            <span id="locationError" class="text-red-600 text-xs"></span>
-            <input type="text" id="city" name="city" placeholder="City" required class="input input-bordered w-full mb-1" />
-            <span id="cityError" class="text-red-600 text-xs"></span>
-            <button type="submit" name="insert_hr" class="btn btn-primary w-full mt-2">Submit</button>
-        </form>
-        <?php if (isset($_GET['success'])): ?>
-            <div class="text-green-600 font-semibold mb-4">User added successfully!</div>
-        <?php endif; ?>
-        
-        <!-- HR Table -->
-        <div id="hrTable" style="display:block;">
-            <h3 class="text-lg font-bold mb-4 text-blue-700">HR Table</h3>
-            <div class="overflow-x-auto rounded-lg shadow">
+
+        <!-- HR Section -->
+        <div id="hrTab" class="tab-content">
+            <h2 class="text-xl font-bold mb-4 text-blue-700">Manage HR</h2>
+            <?php if (isset($_GET['tab']) && $_GET['tab'] === 'hr' && isset($_GET['success'])): ?>
+                <div class="text-green-600 font-semibold mb-4">Operation successful!</div>
+            <?php endif; ?>
+            <?php if (isset($_GET['tab']) && $_GET['tab'] === 'hr' && isset($_GET['error']) && $_GET['error'] === 'password'): ?>
+                <div class="text-red-600 font-semibold mb-4">Passwords do not match!</div>
+            <?php endif; ?>
+            <!-- Add HR Form -->
+            <form method="post" action="admin.php?tab=hr" onsubmit="return validateAdminForm();">
+                <input type="text" id="name" name="name" placeholder="Name" required class="input input-bordered w-full mb-1" />
+                <span id="nameError" class="text-red-600 text-xs"></span>
+                <input type="email" id="email" name="email" placeholder="Email" required class="input input-bordered w-full mb-1" />
+                <span id="emailError" class="text-red-600 text-xs"></span>
+                <input type="password" id="password" name="password" placeholder="Password" required class="input input-bordered w-full mb-1" />
+                <span id="password1Error" class="text-red-600 text-xs"></span>
+                <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm Password" required class="input input-bordered w-full mb-1" />
+                <span id="password2Error" class="text-red-600 text-xs"></span>
+                <input type="date" id="dob" name="dob" placeholder="DOB" required class="input input-bordered w-full mb-1" />
+                <span id="dobError" class="text-red-600 text-xs"></span>
+                <input type="text" id="location" name="location" placeholder="Location" required class="input input-bordered w-full mb-1" />
+                <span id="locationError" class="text-red-600 text-xs"></span>
+                <input type="text" id="city" name="city" placeholder="City" required class="input input-bordered w-full mb-1" />
+                <span id="cityError" class="text-red-600 text-xs"></span>
+                <button type="submit" name="insert_hr" class="btn btn-primary w-full mt-2">Add HR</button>
+            </form>
+            <!-- HR Table -->
+            <div class="overflow-x-auto rounded-lg shadow mt-8">
                 <table class="table w-full bg-white">
                     <thead class="bg-blue-100 text-blue-800">
                         <tr>
-                            <th class="px-4 py-2">Name</th>
-                            <th class="px-4 py-2">Email</th>
-                            <th class="px-4 py-2">DOB</th>
-                            <th class="px-4 py-2">Location</th>
-                            <th class="px-4 py-2">City</th>
-                            <th class="px-4 py-2">Actions</th>
+                            <th>Name</th><th>Email</th><th>DOB</th><th>Location</th><th>City</th><th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($hrList as $hr): ?>
-                        <tr class="hover:bg-blue-50 transition">
-                            <td class="px-4 py-2"><?php echo htmlspecialchars($hr['Name']); ?></td>
-                            <td class="px-4 py-2"><?php echo htmlspecialchars($hr['Email']); ?></td>
-                            <td class="px-4 py-2"><?php echo htmlspecialchars($hr['DOB']); ?></td>
-                            <td class="px-4 py-2"><?php echo htmlspecialchars($hr['Location']); ?></td>
-                            <td class="px-4 py-2"><?php echo htmlspecialchars($hr['City']); ?></td>
-                            <td class="px-4 py-2">
+                        <?php if (isset($editHR) && $editHR['id'] == $hr['id']): ?>
+                        <!-- Edit HR Row -->
+                        <tr style="background: #f3e8ff;">
+                            <form method="post">
+                                <input type="hidden" name="update_hr_id" value="<?= $editHR['id'] ?>">
+                                <td><input type="text" name="update_hr_name" value="<?= htmlspecialchars($editHR['Name']) ?>" required class="input input-bordered input-xs w-full" /></td>
+                                <td><input type="email" name="update_hr_email" value="<?= htmlspecialchars($editHR['Email']) ?>" required class="input input-bordered input-xs w-full" /></td>
+                                <td><input type="date" name="update_hr_dob" value="<?= htmlspecialchars($editHR['DOB']) ?>" required class="input input-bordered input-xs w-full" /></td>
+                                <td><input type="text" name="update_hr_location" value="<?= htmlspecialchars($editHR['Location']) ?>" required class="input input-bordered input-xs w-full" /></td>
+                                <td><input type="text" name="update_hr_city" value="<?= htmlspecialchars($editHR['City']) ?>" required class="input input-bordered input-xs w-full" /></td>
+                                <td>
+                                    <button type="submit" name="update_hr" class="btn btn-success btn-xs">Save</button>
+                                    <a href="admin.php?tab=hr" class="btn btn-secondary btn-xs">Cancel</a>
+                                </td>
+                            </form>
+                        </tr>
+                        <?php else: ?>
+                        <tr>
+                            <td><?= htmlspecialchars($hr['Name']) ?></td>
+                            <td><?= htmlspecialchars($hr['Email']) ?></td>
+                            <td><?= htmlspecialchars($hr['DOB']) ?></td>
+                            <td><?= htmlspecialchars($hr['Location']) ?></td>
+                            <td><?= htmlspecialchars($hr['City']) ?></td>
+                            <td>
                                 <form method="post" style="display:inline;">
                                     <input type="hidden" name="edit_hr_id" value="<?= $hr['id'] ?>">
                                     <button type="submit" name="edit_hr" class="btn btn-warning btn-xs">Edit</button>
@@ -206,36 +199,74 @@ if ($con) {
                                 </form>
                             </td>
                         </tr>
+                        <?php endif; ?>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- Employee Table -->
-        <div id="empTable" style="display:none;">
-            <h3 class="text-lg font-bold mb-4 text-purple-700">Employee Table</h3>
-            <div class="overflow-x-auto rounded-lg shadow">
+        <!-- Employee Section -->
+        <div id="employeeTab" class="tab-content">
+            <h2 class="text-xl font-bold mb-4 text-purple-700">Manage Employee</h2>
+            <?php if (isset($_GET['tab']) && $_GET['tab'] === 'employee' && isset($_GET['success'])): ?>
+                <div class="text-green-600 font-semibold mb-4">Operation successful!</div>
+            <?php endif; ?>
+            <?php if (isset($_GET['tab']) && $_GET['tab'] === 'employee' && isset($_GET['error']) && $_GET['error'] === 'password'): ?>
+                <div class="text-red-600 font-semibold mb-4">Passwords do not match!</div>
+            <?php endif; ?>
+            <!-- Add Employee Form -->
+            <form method="post" action="admin.php?tab=employee" onsubmit="return validateEmployeeForm();">
+                <input type="text" id="emp_name" name="name" placeholder="Name" required class="input input-bordered w-full mb-1" />
+                <span id="emp_nameError" class="text-red-600 text-xs"></span>
+                <input type="email" id="emp_email" name="email" placeholder="Email" required class="input input-bordered w-full mb-1" />
+                <span id="emp_emailError" class="text-red-600 text-xs"></span>
+                <input type="password" id="emp_password" name="password" placeholder="Password" required class="input input-bordered w-full mb-1" />
+                <span id="emp_password1Error" class="text-red-600 text-xs"></span>
+                <input type="password" id="emp_confirm_password" name="confirm_password" placeholder="Confirm Password" required class="input input-bordered w-full mb-1" />
+                <span id="emp_password2Error" class="text-red-600 text-xs"></span>
+                <input type="date" id="emp_dob" name="dob" placeholder="DOB" required class="input input-bordered w-full mb-1" />
+                <span id="emp_dobError" class="text-red-600 text-xs"></span>
+                <input type="text" id="emp_location" name="location" placeholder="Location" required class="input input-bordered w-full mb-1" />
+                <span id="emp_locationError" class="text-red-600 text-xs"></span>
+                <input type="text" id="emp_city" name="city" placeholder="City" required class="input input-bordered w-full mb-1" />
+                <span id="emp_cityError" class="text-red-600 text-xs"></span>
+                <button type="submit" name="insert_employee" class="btn btn-primary w-full mt-2">Add Employee</button>
+            </form>
+            <!-- Employee Table -->
+            <div class="overflow-x-auto rounded-lg shadow mt-8">
                 <table class="table w-full bg-white">
                     <thead class="bg-purple-100 text-purple-800">
                         <tr>
-                            <th class="px-4 py-2">Name</th>
-                            <th class="px-4 py-2">Email</th>
-                            <th class="px-4 py-2">DOB</th>
-                            <th class="px-4 py-2">Location</th>
-                            <th class="px-4 py-2">City</th>
-                            <th class="px-4 py-2">Actions</th>
+                            <th>Name</th><th>Email</th><th>DOB</th><th>Location</th><th>City</th><th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($empList as $emp): ?>
-                        <tr class="hover:bg-purple-50 transition">
-                            <td class="px-4 py-2"><?php echo htmlspecialchars($emp['Name']); ?></td>
-                            <td class="px-4 py-2"><?php echo htmlspecialchars($emp['Email']); ?></td>
-                            <td class="px-4 py-2"><?php echo htmlspecialchars($emp['DOB']); ?></td>
-                            <td class="px-4 py-2"><?php echo htmlspecialchars($emp['Location']); ?></td>
-                            <td class="px-4 py-2"><?php echo htmlspecialchars($emp['City']); ?></td>
-                            <td class="px-4 py-2">
+                        <?php if (isset($editEmployee) && $editEmployee['id'] == $emp['id']): ?>
+                        <!-- Edit Employee Row -->
+                        <tr style="background: #ede9fe;">
+                            <form method="post">
+                                <input type="hidden" name="update_employee_id" value="<?= $editEmployee['id'] ?>">
+                                <td><input type="text" name="update_employee_name" value="<?= htmlspecialchars($editEmployee['Name']) ?>" required class="input input-bordered input-xs w-full" /></td>
+                                <td><input type="email" name="update_employee_email" value="<?= htmlspecialchars($editEmployee['Email']) ?>" required class="input input-bordered input-xs w-full" /></td>
+                                <td><input type="date" name="update_employee_dob" value="<?= htmlspecialchars($editEmployee['DOB']) ?>" required class="input input-bordered input-xs w-full" /></td>
+                                <td><input type="text" name="update_employee_location" value="<?= htmlspecialchars($editEmployee['Location']) ?>" required class="input input-bordered input-xs w-full" /></td>
+                                <td><input type="text" name="update_employee_city" value="<?= htmlspecialchars($editEmployee['City']) ?>" required class="input input-bordered input-xs w-full" /></td>
+                                <td>
+                                    <button type="submit" name="update_employee" class="btn btn-success btn-xs">Save</button>
+                                    <a href="admin.php?tab=employee" class="btn btn-secondary btn-xs">Cancel</a>
+                                </td>
+                            </form>
+                        </tr>
+                        <?php else: ?>
+                        <tr>
+                            <td><?= htmlspecialchars($emp['Name']) ?></td>
+                            <td><?= htmlspecialchars($emp['Email']) ?></td>
+                            <td><?= htmlspecialchars($emp['DOB']) ?></td>
+                            <td><?= htmlspecialchars($emp['Location']) ?></td>
+                            <td><?= htmlspecialchars($emp['City']) ?></td>
+                            <td>
                                 <form method="post" style="display:inline;">
                                     <input type="hidden" name="edit_employee_id" value="<?= $emp['id'] ?>">
                                     <button type="submit" name="edit_employee" class="btn btn-warning btn-xs">Edit</button>
@@ -246,87 +277,34 @@ if ($con) {
                                 </form>
                             </td>
                         </tr>
+                        <?php endif; ?>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
         </div>
-
-        <!-- Edit HR Form (conditionally displayed) -->
-        <?php if ($editHR): ?>
-        <form method="post" class="w-full max-w-md bg-white p-6 rounded-lg shadow">
-            <h2 class="text-xl font-bold mb-4 text-blue-700">Edit HR</h2>
-            <input type="hidden" name="update_hr_id" value="<?= $editHR['id'] ?>">
-            <input type="text" name="update_hr_name" value="<?= htmlspecialchars($editHR['Name']) ?>" required class="input input-bordered w-full mb-1" />
-            <span id="update_nameError" class="text-red-600 text-xs"></span>
-            <input type="email" name="update_hr_email" value="<?= htmlspecialchars($editHR['Email']) ?>" required class="input input-bordered w-full mb-1" />
-            <span id="update_emailError" class="text-red-600 text-xs"></span>
-            <input type="password" name="update_hr_password" placeholder="New Password (leave blank to keep current)" class="input input-bordered w-full mb-1" />
-            <span id="update_passwordError" class="text-red-600 text-xs"></span>
-            <input type="password" name="update_hr_confirm_password" placeholder="Confirm New Password" class="input input-bordered w-full mb-1" />
-            <span id="update_password2Error" class="text-red-600 text-xs"></span>
-            <input type="date" name="update_hr_dob" value="<?= htmlspecialchars($editHR['DOB']) ?>" required class="input input-bordered w-full mb-1" />
-            <span id="update_dobError" class="text-red-600 text-xs"></span>
-            <input type="text" name="update_hr_location" value="<?= htmlspecialchars($editHR['Location']) ?>" required class="input input-bordered w-full mb-1" />
-            <span id="update_locationError" class="text-red-600 text-xs"></span>
-            <input type="text" name="update_hr_city" value="<?= htmlspecialchars($editHR['City']) ?>" required class="input input-bordered w-full mb-1" />
-            <span id="update_cityError" class="text-red-600 text-xs"></span>
-            <button type="submit" name="update_hr" class="btn btn-primary w-full mt-2">Update HR</button>
-        </form>
-        <?php endif; ?>
-
-        <!-- Edit Employee Form (conditionally displayed) -->
-        <?php if ($editEmployee): ?>
-        <div style="margin: 20px 0; padding: 16px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; max-width: 400px;">
-            <h4 style="color: #7c3aed; margin-bottom: 12px;">Update Employee</h4>
-            <form method="post">
-                <input type="hidden" name="update_employee_id" value="<?= $editEmployee['id'] ?>">
-                <label style="display:block; margin-bottom:6px;">Name:
-                    <input type="text" name="update_employee_name" value="<?= htmlspecialchars($editEmployee['Name']) ?>" required style="width:100%; margin-bottom:10px; padding:6px;">
-                </label>
-                <label style="display:block; margin-bottom:6px;">Email:
-                    <input type="email" name="update_employee_email" value="<?= htmlspecialchars($editEmployee['Email']) ?>" required style="width:100%; margin-bottom:10px; padding:6px;">
-                </label>
-                <label style="display:block; margin-bottom:6px;">DOB:
-                    <input type="date" name="update_employee_dob" value="<?= htmlspecialchars($editEmployee['DOB']) ?>" required style="width:100%; margin-bottom:10px; padding:6px;">
-                </label>
-                <label style="display:block; margin-bottom:6px;">Location:
-                    <input type="text" name="update_employee_location" value="<?= htmlspecialchars($editEmployee['Location']) ?>" required style="width:100%; margin-bottom:10px; padding:6px;">
-                </label>
-                <label style="display:block; margin-bottom:6px;">City:
-                    <input type="text" name="update_employee_city" value="<?= htmlspecialchars($editEmployee['City']) ?>" required style="width:100%; margin-bottom:10px; padding:6px;">
-                </label>
-                <button type="submit" name="update_employee" style="background:#7c3aed; color:#fff; border:none; padding:8px 18px; border-radius:4px; margin-top:8px;">Update Employee</button>
-            </form>
-        </div>
-        <?php endif; ?>
-    </section>
-    <script src="verification.js"></script>
+    </div>
     <script>
-    function handleAdminSubmit(event) {
-        if (!validateAdminForm()) {
-            event.preventDefault();
-            return false;
+        // Tab switching logic
+        function showTab(tab) {
+            document.getElementById('hrTab').classList.remove('active');
+            document.getElementById('employeeTab').classList.remove('active');
+            document.getElementById('hrTabBtn').classList.remove('active');
+            document.getElementById('employeeTabBtn').classList.remove('active');
+            if (tab === 'hr') {
+                document.getElementById('hrTab').classList.add('active');
+                document.getElementById('hrTabBtn').classList.add('active');
+            } else {
+                document.getElementById('employeeTab').classList.add('active');
+                document.getElementById('employeeTabBtn').classList.add('active');
+            }
         }
-        // If valid, let the form submit to verification.php
-        return true;
-    }
-    function setFormType(type) {
-        document.getElementById('formTitle').innerText = 'Add ' + type;
-        document.getElementById('typeInput').value = type;
-        if (type === 'HR') {
-            document.getElementById('hrTable').style.display = 'block';
-            document.getElementById('empTable').style.display = 'none';
-        } else {
-            document.getElementById('hrTable').style.display = 'none';
-            document.getElementById('empTable').style.display = 'block';
+        // On page load, show correct tab
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tab = urlParams.get('tab') || 'hr';
+            showTab(tab);
         }
-    }
-
-    function validateForm() {
-        // ...validation...
-        return isValid; // Must return true to allow submission
-    }
     </script>
 </body>
 </html>
