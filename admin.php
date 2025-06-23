@@ -117,7 +117,7 @@ while ($row = mysqli_fetch_assoc($empResult)) $empList[] = $row;
         .tab-content.active { display: block; }
     </style>
 </head>
-<body>
+<body style="width: 60%; margin: 60px auto;">
     <div class="p-4 text-2xl font-bold text-white bg-gradient-to-r from-blue-500 to-purple-500 rounded-b-xl shadow-md text-center tracking-wide mb-4">
         Welcome Admin!
         <a href="logout.php" class="btn btn-error btn-sm float-right mt-2 mr-4" style="position:absolute;right:30px;top:10px;">Logout</a>
