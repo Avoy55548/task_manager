@@ -138,22 +138,46 @@ while ($row = mysqli_fetch_assoc($empResult)) $empList[] = $row;
                 <div class="text-red-600 font-semibold mb-4">Passwords do not match!</div>
             <?php endif; ?>
             <!-- Add HR Form -->
-            <form method="post" action="admin.php?tab=hr" onsubmit="return validateAdminForm();">
-                <input type="text" id="name" name="name" placeholder="Name" required class="input input-bordered w-full mb-1" />
-                <span id="nameError" class="text-red-600 text-xs"></span>
-                <input type="email" id="email" name="email" placeholder="Email" required class="input input-bordered w-full mb-1" />
-                <span id="emailError" class="text-red-600 text-xs"></span>
-                <input type="password" id="password" name="password" placeholder="Password" required class="input input-bordered w-full mb-1" />
-                <span id="password1Error" class="text-red-600 text-xs"></span>
-                <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm Password" required class="input input-bordered w-full mb-1" />
-                <span id="password2Error" class="text-red-600 text-xs"></span>
-                <input type="date" id="dob" name="dob" placeholder="DOB" required class="input input-bordered w-full mb-1" />
-                <span id="dobError" class="text-red-600 text-xs"></span>
-                <input type="text" id="location" name="location" placeholder="Location" required class="input input-bordered w-full mb-1" />
-                <span id="locationError" class="text-red-600 text-xs"></span>
-                <input type="text" id="city" name="city" placeholder="City" required class="input input-bordered w-full mb-1" />
-                <span id="cityError" class="text-red-600 text-xs"></span>
-                <button type="submit" name="insert_hr" class="btn btn-primary w-full mt-2">Add HR</button>
+            <form method="post" action="admin.php?tab=hr" onsubmit="return validateAdminForm();" class="max-w-lg mx-auto bg-white p-8 rounded-xl shadow-lg border border-blue-100 mb-8">
+                <h3 class="text-2xl font-bold mb-6 text-blue-700 text-center">Add HR</h3>
+                <div class="grid grid-cols-1 gap-4">
+                    <div>
+                        <label for="name" class="block text-sm font-medium mb-1">Name</label>
+                        <input type="text" id="name" name="name" class="input input-bordered w-full" required>
+                        <span id="nameError" class="text-red-600 text-xs"></span>
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium mb-1">Email</label>
+                        <input type="email" id="email" name="email" class="input input-bordered w-full" required>
+                        <span id="emailError" class="text-red-600 text-xs"></span>
+                    </div>
+                    <div>
+                        <label for="password" class="block text-sm font-medium mb-1">Password</label>
+                        <input type="password" id="password" name="password" class="input input-bordered w-full" required>
+                        <span id="password1Error" class="text-red-600 text-xs"></span>
+                    </div>
+                    <div>
+                        <label for="confirm_password" class="block text-sm font-medium mb-1">Confirm Password</label>
+                        <input type="password" id="confirm_password" name="confirm_password" class="input input-bordered w-full" required>
+                        <span id="password2Error" class="text-red-600 text-xs"></span>
+                    </div>
+                    <div>
+                        <label for="dob" class="block text-sm font-medium mb-1">Date of Birth</label>
+                        <input type="date" id="dob" name="dob" class="input input-bordered w-full" required>
+                        <span id="dobError" class="text-red-600 text-xs"></span>
+                    </div>
+                    <div>
+                        <label for="location" class="block text-sm font-medium mb-1">Location</label>
+                        <input type="text" id="location" name="location" class="input input-bordered w-full" required>
+                        <span id="locationError" class="text-red-600 text-xs"></span>
+                    </div>
+                    <div>
+                        <label for="city" class="block text-sm font-medium mb-1">City</label>
+                        <input type="text" id="city" name="city" class="input input-bordered w-full" required>
+                        <span id="cityError" class="text-red-600 text-xs"></span>
+                    </div>
+                </div>
+                <button type="submit" name="insert_hr" class="btn btn-primary w-full mt-6">Add HR</button>
             </form>
             <!-- HR Table -->
             <div class="overflow-x-auto rounded-lg shadow mt-8">
@@ -216,22 +240,46 @@ while ($row = mysqli_fetch_assoc($empResult)) $empList[] = $row;
                 <div class="text-red-600 font-semibold mb-4">Passwords do not match!</div>
             <?php endif; ?>
             <!-- Add Employee Form -->
-            <form method="post" action="admin.php?tab=employee" onsubmit="return validateEmployeeForm();">
-                <input type="text" id="emp_name" name="name" placeholder="Name" required class="input input-bordered w-full mb-1" />
-                <span id="emp_nameError" class="text-red-600 text-xs"></span>
-                <input type="email" id="emp_email" name="email" placeholder="Email" required class="input input-bordered w-full mb-1" />
-                <span id="emp_emailError" class="text-red-600 text-xs"></span>
-                <input type="password" id="emp_password" name="password" placeholder="Password" required class="input input-bordered w-full mb-1" />
-                <span id="emp_password1Error" class="text-red-600 text-xs"></span>
-                <input type="password" id="emp_confirm_password" name="confirm_password" placeholder="Confirm Password" required class="input input-bordered w-full mb-1" />
-                <span id="emp_password2Error" class="text-red-600 text-xs"></span>
-                <input type="date" id="emp_dob" name="dob" placeholder="DOB" required class="input input-bordered w-full mb-1" />
-                <span id="emp_dobError" class="text-red-600 text-xs"></span>
-                <input type="text" id="emp_location" name="location" placeholder="Location" required class="input input-bordered w-full mb-1" />
-                <span id="emp_locationError" class="text-red-600 text-xs"></span>
-                <input type="text" id="emp_city" name="city" placeholder="City" required class="input input-bordered w-full mb-1" />
-                <span id="emp_cityError" class="text-red-600 text-xs"></span>
-                <button type="submit" name="insert_employee" class="btn btn-primary w-full mt-2">Add Employee</button>
+            <form method="post" action="admin.php?tab=employee" onsubmit="return validateEmployeeForm();" class="max-w-lg mx-auto bg-white p-8 rounded-xl shadow-lg border border-purple-100 mb-8">
+                <h3 class="text-2xl font-bold mb-6 text-purple-700 text-center">Add Employee</h3>
+                <div class="grid grid-cols-1 gap-4">
+                    <div>
+                        <label for="emp_name" class="block text-sm font-medium mb-1">Name</label>
+                        <input type="text" id="emp_name" name="name" class="input input-bordered w-full" required>
+                        <span id="emp_nameError" class="text-red-600 text-xs"></span>
+                    </div>
+                    <div>
+                        <label for="emp_email" class="block text-sm font-medium mb-1">Email</label>
+                        <input type="email" id="emp_email" name="email" class="input input-bordered w-full" required>
+                        <span id="emp_emailError" class="text-red-600 text-xs"></span>
+                    </div>
+                    <div>
+                        <label for="emp_password" class="block text-sm font-medium mb-1">Password</label>
+                        <input type="password" id="emp_password" name="password" class="input input-bordered w-full" required>
+                        <span id="emp_password1Error" class="text-red-600 text-xs"></span>
+                    </div>
+                    <div>
+                        <label for="emp_confirm_password" class="block text-sm font-medium mb-1">Confirm Password</label>
+                        <input type="password" id="emp_confirm_password" name="confirm_password" class="input input-bordered w-full" required>
+                        <span id="emp_password2Error" class="text-red-600 text-xs"></span>
+                    </div>
+                    <div>
+                        <label for="emp_dob" class="block text-sm font-medium mb-1">Date of Birth</label>
+                        <input type="date" id="emp_dob" name="dob" class="input input-bordered w-full" required>
+                        <span id="emp_dobError" class="text-red-600 text-xs"></span>
+                    </div>
+                    <div>
+                        <label for="emp_location" class="block text-sm font-medium mb-1">Location</label>
+                        <input type="text" id="emp_location" name="location" class="input input-bordered w-full" required>
+                        <span id="emp_locationError" class="text-red-600 text-xs"></span>
+                    </div>
+                    <div>
+                        <label for="emp_city" class="block text-sm font-medium mb-1">City</label>
+                        <input type="text" id="emp_city" name="city" class="input input-bordered w-full" required>
+                        <span id="emp_cityError" class="text-red-600 text-xs"></span>
+                    </div>
+                </div>
+                <button type="submit" name="insert_employee" class="btn btn-primary w-full mt-6">Add Employee</button>
             </form>
             <!-- Employee Table -->
             <div class="overflow-x-auto rounded-lg shadow mt-8">
