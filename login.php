@@ -56,11 +56,10 @@ if (isset($_POST["loginName"]) && isset($_POST["loginPassword"])) {
         exit();
     }
 
-    // If no match found
     header("Location: index.php?error=1");
     exit();
 }
-// If accessed directly, redirect to login page
+
 header("Location: index.php");
 exit();
 ?>
