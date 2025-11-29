@@ -1,0 +1,64 @@
+admin table-
+CREATE TABLE admin (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    Name VARCHAR(100) NOT NULL,
+    Password VARCHAR(100) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+INSERT INTO `admin` (`Name`, `Password`) VALUES ('admin1', '1234'), (NULL, 'admin2', '5678'), (NULL, 'admin3', '7890');
+
+employee table-
+CREATE TABLE employee (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    Name VARCHAR(100) NOT NULL,
+    Email VARCHAR(50) NOT NULL,
+    Password VARCHAR(50) NOT NULL,
+    DOB VARCHAR(10) NOT NULL,
+    Location VARCHAR(20) NOT NULL,
+    City VARCHAR(10) NOT NULL,
+    PRIMARY KEY (id)
+);
+INSERT INTO employee (Name, Email, Password, DOB, Location, City)
+VALUES
+('emp1', 'emp1@gmail.com', '1234', '12/23/1999', 'Mirpur', 'Dhaka'),
+('emp2', 'emp2@gmail.com', '5678', '12/23/2001', 'Uttara', 'Dhaka'),
+('emp3', 'emp3@gmail.com', '7890', '01/23/1998', 'Gulshan', 'Dhaka'),
+('emp4', 'emp4@gmail.com', '1212', '10/22/2001', 'Mirpur1', 'Dhaka');
+
+hr table-
+CREATE TABLE hr (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    Name VARCHAR(100) NOT NULL,
+    Email VARCHAR(50) NOT NULL,
+    Password VARCHAR(50) NOT NULL,
+    DOB VARCHAR(10) NOT NULL,
+    Location VARCHAR(20) NOT NULL,
+    City VARCHAR(10) NOT NULL,
+    PRIMARY KEY (id)
+);
+INSERT INTO hr (Name, Email, Password, DOB, Location, City)
+VALUES
+('hr1', 'hr1@gmail.com', '1234', '12/23/1999', 'Mirpur', 'Dhaka'),
+('hr2', 'hr2@gmail.com', '5678', '12/23/2001', 'Uttara', 'Dhaka'),
+('hr3', 'hr3@gmail.com', '7890', '01/23/1998', 'Gulshan', 'Dhaka'),
+('hr4', 'hr4@gmail.com', '1212', '10/22/2001', 'Mirpur1', 'Dhaka');
+
+
+task table-
+CREATE TABLE task (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    Task_Title VARCHAR(255) NOT NULL,
+    Task_Desc TEXT NOT NULL,
+    Deadline VARCHAR(20) NOT NULL,
+    PRIMARY KEY (id)
+);
+INSERT INTO task (Task_Title, Task_Desc, Deadline)
+VALUES
+('ShopEase -> Fix Mobile Button Issue', 'Debug using Chrome DevTools, check for overlapping', '26 July 2025'),
+('CloudSync -> Add Dark Mode', 'Store the user’s preference in local Storage, update UI', '26 July 2025'),
+('SwiftPay -> Optimize Home page', 'Debug using Chrome DevTools, check for overlapping', '26 July 2025'),
+('Meta -> Add new emoji', 'Debug using Chrome DevTools, check for overlapping', '26 July 2025'),
+('Google LLC -> Integrate OpenAI API', 'Debug using Chrome DevTools, check for overlapping', '26 July 2025'),
+('Glassdoor -> Improve Job searching', 'Debug using Chrome DevTools, check for overlapping', '26 July 2025'),
+('Yahoo -> Fix Button', 'Debug using Chrome DevTools, check for overlapping', '2025-06-23');
