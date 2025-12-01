@@ -1,4 +1,5 @@
-admin table-
+1.admin table-
+
 CREATE TABLE admin (
     id INT(11) NOT NULL AUTO_INCREMENT,
     Name VARCHAR(100) NOT NULL,
@@ -8,7 +9,8 @@ CREATE TABLE admin (
 
 INSERT INTO `admin` (`Name`, `Password`) VALUES ('admin1', '1234'), (NULL, 'admin2', '5678'), (NULL, 'admin3', '7890');
 
-employee table-
+2.employee table-
+
 CREATE TABLE employee (
     id INT(11) NOT NULL AUTO_INCREMENT,
     Name VARCHAR(100) NOT NULL,
@@ -26,7 +28,8 @@ VALUES
 ('emp3', 'emp3@gmail.com', '7890', '01/23/1998', 'Gulshan', 'Dhaka'),
 ('emp4', 'emp4@gmail.com', '1212', '10/22/2001', 'Mirpur1', 'Dhaka');
 
-hr table-
+3.hr table-
+
 CREATE TABLE hr (
     id INT(11) NOT NULL AUTO_INCREMENT,
     Name VARCHAR(100) NOT NULL,
@@ -45,7 +48,9 @@ VALUES
 ('hr4', 'hr4@gmail.com', '1212', '10/22/2001', 'Mirpur1', 'Dhaka');
 
 
-task table-
+4.task table-
+
+
 CREATE TABLE task (
     id INT(11) NOT NULL AUTO_INCREMENT,
     Task_Title VARCHAR(255) NOT NULL,
